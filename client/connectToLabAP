@@ -1,0 +1,5 @@
+#!/bin/bash
+
+##connect to ESLab AP SSID: eslab-Dlink652 pw: 305305abcd
+
+tessel wifi -n esys305-Dlink -p 305305abcd
