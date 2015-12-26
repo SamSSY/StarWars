@@ -4,7 +4,7 @@ var bodyParser = require('body-parser');
 var fs = require('fs');
 var app = express();
 var server = http.createServer(app);
-var port = 8080;
+var port = 4000;
 
 var io = require('socket.io')
 			.listen(app.listen(port, function(){

@@ -55,7 +55,7 @@ function sendPairing(){
 	console.log('sending pairing request...');
 	var options = {
         hostname: '52.10.182.239',
-        port: 80,
+        port: 4000,
         path:'/starwars/pairing',
         method: 'POST',
         headers: {
