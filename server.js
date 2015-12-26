@@ -27,11 +27,12 @@ app.get('/starwars', function (req, res) {
   });
 });
 
-io.sockets.on('connection', function (socket) {
-	console.log("Connect, socket on!");
-	app.post('/starwars/pairing', function (req, res) {
+app.post('/starwars/pairing', function (req, res) {
 		console.log("post, battle pairing");
 		console.log(req.body);
-		
-	});
+		res.send('get post!');		
+});
+
+io.sockets.on('connection', function (socket) {
+	console.log("Connect, socket on!");
 });

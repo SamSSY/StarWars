@@ -7,7 +7,8 @@ var isRegistered = false;
 var readyToRegister = false;
 var masterUID = null;
 var rivalUId = null;
-
+var timeId = 0;	
+				
 tessel.button.on('press', function(){
 	readyToRegister = !readyToRegister;
 	if (readyToRegister && !isRegistered){
@@ -37,10 +38,11 @@ rfid.on('ready', function (version) {
 				console.log('new rival!');
 				rivalUId = card.uid.toString('hex');
 				console.log('rival: ' + rivalUId);
-					
-				setInterval(function(){
+				
+				timeId = setInterval(function(){
 					sendPairing();
-				},500);
+				}, 500);
+				
 			}
 		}
 	});
@@ -66,11 +68,14 @@ function sendPairing(){
 	
 	var req = http.request(options, function(res) {
     	res.setEncoding('utf8');
-    	res.on('data', function () {
+    	res.on('data', function (chunk) {
         	console.log('Response received.');
+			console.log(chunk.toString('utf8'));
+			//console.log(timeId);
         });
 
         res.on('end', function(){
+			console.log('res end.');
         });	
     });
 	
