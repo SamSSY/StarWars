@@ -8,6 +8,9 @@ var readyToRegister = false;
 var masterUID = null;
 var rivalUId = null;
 var timeId = 0;	
+var masterScore = 0;
+
+var isBattling = false;
 				
 tessel.button.on('press', function(){
 	readyToRegister = !readyToRegister;
@@ -68,7 +71,10 @@ function sendPairing(){
     	res.on('data', function (chunk) {
         	console.log('Response received.');
 			console.log(chunk.toString('utf8'));
-			//console.log(timeId);
+            if(chunk.toString('utf8') == 'paired'){
+                isBattling = true;
+                
+            }
         });
         
         res.setTimeout(1000, function(){
@@ -82,6 +88,49 @@ function sendPairing(){
     });
 	
 	var data = {'masterUID': masterUID, 'rivalUID': rivalUId};
+	
+	req.on('error', function(e) {
+        console.log('problem with request: ', e.message);
+    });
+	
+	console.log('Pushed data.');
+    req.write(JSON.stringify(data), function(err){
+    	req.end();
+    });	
+}
+
+function updateScore(){
+    console.log('updating score...');
+	var options = {
+        hostname: '52.10.182.239',
+        port: 4000,
+        path:'/updatescore',
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        }
+    };
+    
+    var req = http.request(options, function(res) {
+    	res.setEncoding('utf8');
+    	res.on('data', function (chunk) {
+        	console.log('POST: updatescore Response received.');
+			console.log(chunk.toString('utf8'));
+
+        });
+        
+        res.setTimeout(1000, function(){
+            console.log("timeout");
+            updateScore();
+        });
+        
+        res.on('end', function(){
+			console.log('res end.');
+        });	
+    });
+	
+	var data = {'UID': masterUID, 'score': masterScore};
 	
 	req.on('error', function(e) {
         console.log('problem with request: ', e.message);
