@@ -39,10 +39,7 @@ rfid.on('ready', function (version) {
 				rivalUId = card.uid.toString('hex');
 				console.log('rival: ' + rivalUId);
 				
-				timeId = setInterval(function(){
-					sendPairing();
-				}, 500);
-				
+				sendPairing();
 			}
 		}
 	});
@@ -58,7 +55,7 @@ function sendPairing(){
 	var options = {
         hostname: '52.10.182.239',
         port: 4000,
-        path:'/starwars/pairing',
+        path:'/pairing',
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -73,7 +70,12 @@ function sendPairing(){
 			console.log(chunk.toString('utf8'));
 			//console.log(timeId);
         });
-
+        
+        res.setTimeout(1000, function(){
+            console.log("timeout");
+            sendPairing();
+        });
+        
         res.on('end', function(){
 			console.log('res end.');
         });	

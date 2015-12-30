@@ -2,9 +2,36 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>Document</title>
+	<title>STAR WARS</title>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.css">
+    <link rel="stylesheet" type="text/css" href="../view/main.css">
+    <link href='https://fonts.googleapis.com/css?family=Electrolize' rel='stylesheet' type='text/css'>
 </head>
-<body>
-	
+<body ng-app="app" ng-controller="appCtrl">
+    <div id="title">
+        <h1>STAR WARS</h1>    
+    </div>
+    <div class="content">
+        <div class="user1">
+            A
+        </div>
+        <div id="versus">
+            <p id="vs">VS</p>
+        </div>
+        <div class="user2">
+            B
+        </div>
+    </div>
+    <div class="footer">
+        <small>&copy; 2015 NTUEE ESLAB TEAM08</small>
+    </div>
+
 </body>
+    <!--jQuery-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <!-- AngularJS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
+    <!-- socket.io -->
+	<script src="https://cdn.socket.io/socket.io-1.3.7.js"></script>
+    <script src="../script/app.js"></script>
 </html>
