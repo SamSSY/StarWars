@@ -6,9 +6,10 @@ var http = require('http');
 var isRegistered = false;
 var readyToRegister = false;
 var masterUID = null;
-var rivalUId = null;
+var rivalUID = null;
 var timeId = 0;	
 var masterScore = 0;
+var rivalScore = 0;
 var isBattling = false;
 
 var gpio_bank = tessel.port['GPIO'];
@@ -130,7 +131,7 @@ function updateScore(){
 
         });
         
-        res.setTimeout(1000, function(){
+        res.setTimeout(2000, function(){
             console.log("timeout");
             updateScore();
         });
@@ -140,7 +141,8 @@ function updateScore(){
         });	
     });
 	
-	var data = {'UID': rivalUID, 'score': masterScore};
+    // rivalScore += 1;
+	var data = {'UID': rivalUID, 'score': rivalScore};
 	
 	req.on('error', function(e) {
         console.log('problem with request: ', e.message);
@@ -155,7 +157,7 @@ function updateScore(){
 function startDetect(){
     setInterval(function(){
         if( !pinA.rawRead() || !pinB.rawRead() || !pinC.rawRead() || !pinD.rawRead()){
-            console.log("get hit!");
+            updateScore();
         }
     }, 100);
 }
