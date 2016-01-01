@@ -16,7 +16,7 @@ angular.module('app',[])
     });
     // req.body: {'UID': XXXXXX, 'score': 1};
     socket.on('updateScore', function( data ){
-        console.log('user UID: ', data.UID, 'plus score: ', score);
+        console.log('user UID: ', data.UID, 'score: ', data.score);
         $scope.$apply(function () {
 			if( $scope.userA == data.UID ){
                 $scope.userAScore = data.score;

@@ -50,8 +50,8 @@ rfid.on('ready', function (version) {
 		else if (isRegistered){
 			if(card.uid.toString('hex') !== masterUID){
 				console.log('new rival!');
-				rivalUId = card.uid.toString('hex');
-				console.log('rival: ' + rivalUId);
+				rivalUID = card.uid.toString('hex');
+				console.log('rival: ' + rivalUID);
 				
 				sendPairing();
 			}
@@ -85,6 +85,9 @@ function sendPairing(){
             if(chunk.toString('utf8') == 'paired'){
                 isBattling = true;
                 startDetect();
+                rivalScore += 1;
+                updateScore();
+                
             }
         });
         
@@ -98,7 +101,7 @@ function sendPairing(){
         });	
     });
 	
-	var data = {'masterUID': masterUID, 'rivalUID': rivalUId};
+	var data = {'masterUID': masterUID, 'rivalUID': rivalUID};
 	
 	req.on('error', function(e) {
         console.log('problem with request: ', e.message);
