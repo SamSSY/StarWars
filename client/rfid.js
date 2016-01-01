@@ -130,7 +130,7 @@ function updateScore(){
         });	
     });
 	
-	var data = {'UID': masterUID, 'score': masterScore};
+	var data = {'UID': rivalUID, 'score': masterScore};
 	
 	req.on('error', function(e) {
         console.log('problem with request: ', e.message);

@@ -40,9 +40,10 @@ io.sockets.on('connection', function (socket) {
             // check pairing
             if( checkPairing() ){
                 isBattling = true;
+                console.log('paired');
                 io.sockets.emit('pairingSuccess', req.body);
             }
-            res.send('paired');		
+            res.send('paired');
     });
     
     // req.body: {'UID': XXXXXX, 'score': 1};
@@ -67,4 +68,5 @@ function checkPairing(){
             return true;
         }
     }
+    return false;
 }
