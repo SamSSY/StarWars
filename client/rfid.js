@@ -31,8 +31,8 @@ pinD.rawDirection(false);
 				
 /* wifi configuration */
 
-var network = 'ntupeep';
-var pass = 'zzzzzzzz';
+var network = 'eslab-Dlink652';//'ntupeep';
+var pass = '305305abcd';//'zzzzzzzz';
 var security = 'wpa2';
 var timeouts = 0;
 
@@ -205,7 +205,7 @@ function sendPairing(){
                 isBattling = true;
                 startDetect();
                 //rivalScore += 1;
-                updateScore();              
+                //updateScore();              
             }
         });
         
@@ -279,6 +279,7 @@ function updateScore(){
 function startDetect(){
     setInterval(function(){
         if( !pinA.rawRead() || !pinB.rawRead() || !pinC.rawRead() || !pinD.rawRead()){
+            rivalScore += 1;
             updateScore();
         }
     }, 100);
