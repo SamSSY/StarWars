@@ -17,8 +17,6 @@ var isBattling = false;
 var isWifiConnected = false;
 
 var gpio_bank = tessel.port['GPIO'];
-var pinA = tessel.port['C'].pin['G2']; //gpio_bank.pin['G1'];
-var pinB = tessel.port['C'].pin['G3']; //gpio_bank.pin['G2'];
 var pinC = gpio_bank.pin['G3'];
 var pinD = gpio_bank.pin['G4'];
 var analogPinA1 = gpio_bank.pin['A1'];
@@ -28,7 +26,6 @@ pinA.rawDirection(false);
 pinB.rawDirection(false);
 pinC.rawDirection(false);
 pinD.rawDirection(false);
-				
 /* wifi configuration */
 
 var network = 'eslab-Dlink652';//'ntupeep';
@@ -45,7 +42,6 @@ wifi.on('connect', function(data){
 wifi.on('disconnect', function(data){
   // wifi dropped, probably want to call connect() again
   console.log("disconnect emitted", data);
-  isWifiConnected = true;
 });
 
 wifi.on('timeout', function(err){
@@ -145,7 +141,6 @@ function printScoreOnSevenSegDisplay( value ){
 tessel.button.on('press', function(){
 	readyToRegister = !readyToRegister;
 	if (readyToRegister && !isRegistered){
-		console.log("ready to register.");
 		tessel.led[0].output(1);
 	}
 	else{
@@ -154,13 +149,9 @@ tessel.button.on('press', function(){
 });
 
 rfid.on('ready', function (version) {
-	console.log('Ready to read RFID card');
 	rfid.on('data', function(card) {
-		console.log('UID:', card.uid.toString('hex'));
   		if(readyToRegister && !isRegistered){
-			console.log('registered.');
 			masterUID = card.uid.toString('hex');
-			console.log('master: ' + masterUID);
 			isRegistered = true;
 			readyToRegister = false;
 			tessel.led[0].output(0);
@@ -168,9 +159,7 @@ rfid.on('ready', function (version) {
 		}
 		else if (isRegistered){
 			if(card.uid.toString('hex') !== masterUID){
-				console.log('new rival!');
 				rivalUID = card.uid.toString('hex');
-				console.log('rival: ' + rivalUID);
 				
 				sendPairing();
 			}
@@ -184,7 +173,6 @@ rfid.on('error', function (err) {
 
 function sendPairing(){
 	
-	console.log('sending pairing request...');
 	var options = {
         hostname: '52.10.182.239',
         port: 4000,
@@ -199,8 +187,6 @@ function sendPairing(){
 	var req = http.request(options, function(res) {
     	res.setEncoding('utf8');
     	res.on('data', function (chunk) {
-        	console.log('Response received.');
-			console.log(chunk.toString('utf8'));
             if(chunk.toString('utf8') == 'paired'){
                 isBattling = true;
                 startDetect();
@@ -215,7 +201,6 @@ function sendPairing(){
         });
         
         res.on('end', function(){
-			console.log('res end.');
         });	
     });
 	
@@ -225,7 +210,6 @@ function sendPairing(){
         console.log('problem with request: ', e.message);
     });
 	
-	console.log('Pushed data.');
     req.write(JSON.stringify(data), function(err){
     	req.end();
     });	
@@ -249,8 +233,6 @@ function updateScore(){
     var req = http.request(options, function(res) {
     	res.setEncoding('utf8');
     	res.on('data', function (chunk) {
-        	console.log('POST: updatescore Response received.');
-			console.log(chunk.toString('utf8'));
 
         });
         
@@ -260,17 +242,12 @@ function updateScore(){
         });
         
         res.on('end', function(){
-			console.log('res end.');
         });	
     });
 	
-	var data = {'UID': rivalUID, 'score': rivalScore};
 	
-	req.on('error', function(e) {
         console.log('problem with request: ', e.message);
     });
-	
-	console.log('Pushed data.');
     req.write(JSON.stringify(data), function(err){
     	req.end();
     });	
