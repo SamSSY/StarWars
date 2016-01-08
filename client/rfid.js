@@ -11,13 +11,18 @@ var rivalUID = null;
 var timeId = 0;	
 var masterScore = 0;
 var rivalScore = 0;
+
+// boolean value
 var isBattling = false;
+var isWifiConnected = false;
 
 var gpio_bank = tessel.port['GPIO'];
-var pinA = gpio_bank.pin['G1'];
-var pinB = gpio_bank.pin['G2'];
+var pinA = tessel.port['C'].pin['G2']; //gpio_bank.pin['G1'];
+var pinB = tessel.port['C'].pin['G3']; //gpio_bank.pin['G2'];
 var pinC = gpio_bank.pin['G3'];
 var pinD = gpio_bank.pin['G4'];
+var analogPinA1 = gpio_bank.pin['A1'];
+
 // set all pins as digital input
 pinA.rawDirection(false);
 pinB.rawDirection(false);
@@ -34,12 +39,14 @@ var timeouts = 0;
 wifi.on('connect', function(data){
   // you're connected
   console.log("connect emitted", data);
+  isWifiConnected = true;
 });
 
 wifi.on('disconnect', function(data){
   // wifi dropped, probably want to call connect() again
   console.log("disconnect emitted", data);
-})
+  isWifiConnected = true;
+});
 
 wifi.on('timeout', function(err){
   // tried to connect but couldn't, retry
@@ -94,6 +101,46 @@ if (!wifi.isConnected()) {
 }
 
 /* end of wifi configuration */
+
+function printScoreOnSevenSegDisplay( value ){
+    switch(value){
+      case 0:
+        analogPinA1.write(0);
+        break;
+      case 1:
+        analogPinA1.write(0.07);
+        break;
+      case 2:
+        analogPinA1.write(0.13);
+        break;
+      case 3:
+        analogPinA1.write(0.18);
+        break;
+      case 'none':
+        analogPinA1.write(0.82);
+        break;
+      case 4:
+        analogPinA1.write(0.24);
+        break;
+      case 5:
+        analogPinA1.write(0.29);
+        break;
+      case 6:
+        analogPinA1.write(0.34);
+        break;
+      case 7:
+        analogPinA1.write(0.395);
+        break;
+      case 8:
+        analogPinA1.write(0.43);
+        break;
+      case 9:
+        analogPinA1.write(0.49);
+        break;
+      default:
+        break;
+    }
+}
 
 tessel.button.on('press', function(){
 	readyToRegister = !readyToRegister;
@@ -157,7 +204,7 @@ function sendPairing(){
             if(chunk.toString('utf8') == 'paired'){
                 isBattling = true;
                 startDetect();
-                rivalScore += 1;
+                //rivalScore += 1;
                 updateScore();              
             }
         });
@@ -186,6 +233,8 @@ function sendPairing(){
 
 function updateScore(){
     console.log('updating score...');
+    printScoreOnSevenSegDisplay(rivalScore);
+    
 	var options = {
         hostname: '52.10.182.239',
         port: 4000,
